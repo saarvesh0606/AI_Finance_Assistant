@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: quantara-web
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantara-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: quantara-redis
+          type: redis
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+
+  - type: worker
+    name: quantara-worker
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python worker.py
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantara-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: quantara-redis
+          type: redis
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: NEWS_API_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+
+  - type: redis
+    name: quantara-redis
+    ipAllowList: []
+
+databases:
+  - name: quantara-db

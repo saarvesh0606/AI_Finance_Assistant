@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuanTara - Advanced Finance Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner-ring"></div>
+        <p>Processing your financial analysis...</p>
+    </div>
+
+    <!-- Professional Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">QT</div>
+                    <h1 class="header-title">QuanTara</h1>
+                    <span class="header-subtitle">Advanced Finance Intelligence</span>
+                </div>
+                <div class="header-right">
+                    <span id="apiStatusBadge" class="status-badge">API: Connecting...</span>
+                </div>
+            </div>
+            
+            <nav class="nav-container">
+                <div class="tabs">
+                    <button data-tab="corporate" class="tab tab-active">
+                       Corporate Analyzer
+                    </button>
+                    <button data-tab="news" class="tab">
+                        Live News
+                    </button>
+                    <button data-tab="stock" class="tab">
+                       Stocks
+                    </button>
+                    <button data-tab="industry" class="tab">
+                       Industry
+                    </button>
+                    <button data-tab="summarization" class="tab">
+                        Summarization
+                    </button>
+                    <button data-tab="whatif" class="tab">
+                       What-If
+                    </button>
+                    <button data-tab="market" class="tab">
+                       Market Intel
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <main class="main-container">
+            <!-- Corporate Analyzer Panel -->
+            <section id="panel-corporate" class="panel panel-active">
+                <div class="panel-header">
+                    <h2 class="panel-title">Corporate Financial Analyzer</h2>
+                    <p class="panel-description">Upload financial documents and get comprehensive AI-powered analysis with deep insights, risk assessment, and growth opportunities</p>
+                </div>
+                
+                <div class="input-grid">
+                    <div class="file-upload-container">
+                        <input id="corpFile" type="file" accept=".pdf,.txt,.csv,.xlsx,.xls" class="file-input">
+                        <label for="corpFile" class="file-label">
+                            <span class="upload-icon">📄</span>
+                            Choose Financial Document
+                        </label>
+                    </div>
+                    <select id="corpCompany" class="select-input">
+                        <option value="">Select Company (CSV only)</option>
+                    </select>
+                    <div class="button-group">
+                        <button id="btnParseCompanies" class="btn btn-secondary">Load Companies</button>
+                        <button id="btnAnalyzeCorporate" class="btn btn-primary">Analyze Document</button>
+                    </div>
+                </div>
+
+                <div id="corpResult" class="result-container hidden">
+                    <div class="result-grid">
+                        <div class="summary-section">
+                            <h3 class="section-title">Executive Summary</h3>
+                            <div id="corpSummary" class="summary-text"></div>
+                        </div>
+                        
+                        <div class="kpi-grid">
+                            <div class="kpi-card">
+                                <div class="kpi-label">Total Revenue</div>
+                                <div id="kpiRevenue" class="kpi-value">—</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Net Income</div>
+                                <div id="kpiIncome" class="kpi-value">—</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">EPS</div>
+                                <div id="kpiEPS" class="kpi-value">—</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Operating Margin</div>
+                                <div id="kpiOM" class="kpi-value">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="section-title">Revenue Trend Analysis</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+
+                    <div class="insights-grid">
+                        <div class="insight-section">
+                            <h3 class="section-title risks">Key Risk Factors</h3>
+                            <ul id="corpRisks" class="insight-list"></ul>
+                        </div>
+                        <div class="insight-section">
+                            <h3 class="section-title opportunities">Growth Opportunities</h3>
+                            <ul id="corpOpps" class="insight-list"></ul>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <span class="insight-badge">AI Insight</span>
+                            <h4 id="corpInsightTitle" class="insight-title"></h4>
+                        </div>
+                        <p id="corpInsightExp" class="insight-explanation"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Panel -->
+            <section id="panel-news" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">Live News Sentiment Analysis</h2>
+                    <p class="panel-description">Real-time news analysis with AI-powered sentiment scoring and market impact assessment</p>
+                </div>
+                
+                <div class="input-row">
+                    <input id="newsCompany" class="text-input" placeholder="Enter company name (e.g., Apple, Tesla, Microsoft)">
+                    <button id="btnFetchNews" class="btn btn-primary">Analyze News Sentiment</button>
+                </div>
+
+                <div id="newsResult" class="result-container"></div>
+            </section>
+
+            <!-- Stock Panel -->
+            <section id="panel-stock" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">Real-Time Stock Analysis</h2>
+                    <p class="panel-description">Advanced technical analysis with predictive modeling and AI-powered market insights</p>
+                </div>
+                
+                <div class="input-grid-s">
+                    <input id="stockTicker" class="text-input" placeholder="Enter Stock ticker (e.g., AAPL, TSLA, GOOGL)">
+                    <select id="stockPeriod" class="select-input">
+                        <option value="1mo">1 Month</option>
+                        <option value="3mo">3 Months</option>
+                        <option value="6mo">6 Months</option>
+                        <option value="1y">1 Year</option>
+                        <option value="2y">2 Years</option>
+                    </select>
+                    <select id="stockInterval" class="select-input">
+                        <option value="1d">Daily</option>
+                        <option value="1h">Hourly</option>
+                        <option value="30m">30 Minutes</option>
+                        <option value="15m">15 Minutes</option>
+                    </select>
+                    <button id="btnStockAnalyze" class="btn btn-primary">Analyze Stock</button>
+                </div>
+                <textarea id="stockQuestion" class="text-area" placeholder="Ask a specific question about this stock or request detailed analysis (optional)"></textarea>
+                
+                <div id="stockResult" class="result-container hidden"></div>
+            </section>
+
+            <!-- Industry Panel -->
+            <section id="panel-industry" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">Industry Intelligence Analysis</h2>
+                    <p class="panel-description">Comprehensive industry insights powered by AI with market trends and competitive landscape analysis</p>
+                </div>
+                
+                <div class="input-row">
+                    <input id="industryName" class="text-input" placeholder="Industry name (e.g., Semiconductors, Healthcare, FinTech)">
+                    <input id="industryInputs" class="text-input" placeholder="Focus areas or specific topics (optional)">
+                    <button id="btnIndustryAnalyze" class="btn btn-primary">Analyze Industry</button>
+                </div>
+
+                <div id="industryResult" class="result-container"></div>
+            </section>
+
+            <!-- Summarization Panel -->
+            <section id="panel-summarization" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">Document Summarization</h2>
+                    <p class="panel-description">AI-powered document analysis and intelligent summarization for quick insights and key takeaways</p>
+                </div>
+                
+                <div class="input-grid-summary">
+                    <select id="sumStyle" class="select-input">
+                        <option value="short">Short Summary (Key Points)</option>
+                        <option value="medium">Medium Summary (Detailed)</option>
+                        <option value="long">Comprehensive Summary (Full Analysis)</option>
+                    </select>
+                    <div id="summ-file-upload" class="file-upload-container">
+                        <input id="sumFile" type="file" accept=".pdf,.txt,.docx,.doc" class="file-input">
+                        <label for="sumFile" class="file-label">
+                            <span class="upload-icon">📄</span>
+                            Choose Document to Summarize
+                        </label>
+                    </div>
+                    <button id="btnSummarizeFile" class="btn btn-primary">Summarize File</button>
+                </div>
+                
+                <div class="text-input-section">
+                    <textarea id="sumText" class="text-area" placeholder="...or paste text here for instant summarization"></textarea>
+                    <button id="btnSummarizeText" class="btn btn-secondary">Summarize Text</button>
+                </div>
+
+                <div id="sumResult" class="result-container"></div>
+            </section>
+
+            <!-- What-If Panel -->
+            <section id="panel-whatif" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">What-If Scenario Analysis</h2>
+                    <p class="panel-description">Explore hypothetical scenarios and their potential impacts based on your previous financial analysis</p>
+                </div>
+                
+                <div class="input-row">
+                    <input id="whatIfQuery" class="text-input" placeholder='e.g., "What if revenue drops by 15%?" or "Impact of 20% cost reduction?"'>
+                    <button id="btnWhatIf" class="btn btn-primary">Run Scenario</button>
+                </div>
+
+                <div id="whatIfResult" class="result-container"></div>
+            </section>
+
+            <!-- Market Intel Panel -->
+            <section id="panel-market" class="panel hidden">
+                <div class="panel-header">
+                    <h2 class="panel-title">Market Intelligence Synthesis</h2>
+                    <p class="panel-description">Multi-document analysis for comprehensive market insights and competitive intelligence</p>
+                </div>
+                
+                <div class="input-row">
+                    <div class="file-upload-container">
+                        <input id="miFiles" type="file" multiple accept=".pdf,.txt,.csv,.xlsx,.xls" class="file-input">
+                        <label for="miFiles" class="file-label">
+                            <span class="upload-icon">📁</span>
+                            Choose Multiple Documents
+                        </label>
+                    </div>
+                    <button id="btnAnalyzeMarket" class="btn btn-primary">Analyze Market Intelligence</button>
+                </div>
+
+                <div id="miResult" class="result-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>Powered by Advanced AI • Built for Professional Financial Excellence</p>
+                <div class="footer-links">
+                    <span>QuanTara © 2024</span>
+                    <span>•</span>
+                    <span>Hackathon Project</span>
+                    <span>•</span>
+                    <span>Made with Innovation</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

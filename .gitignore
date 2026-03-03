@@ -1,0 +1,11 @@
+# Environment variables
+.venv/  
+    venv/
+.env
+
+# Flask session files
+flask_session/
+
+# Python artifacts
+__pycache__/
+*.pyc
