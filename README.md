@@ -309,8 +309,8 @@ Planned improvements:
 
 ## 👤 Author
 
-**Prasanna Raut**  
-AI Systems & Financial Intelligence Developer  
+**Sarvesh Jagtap**  
+
 
 ---
 
